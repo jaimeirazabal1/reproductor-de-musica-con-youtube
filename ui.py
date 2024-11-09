@@ -18,7 +18,7 @@ indice_actual = 0
 reproduciendo = False
 imagen_miniatura = None
 duracion_total = 0
-
+volumen_actual = 0.5
 # Función para descargar audio y miniatura
 def descargar_audio(url):
     progreso.set("Iniciando descarga...")
@@ -142,6 +142,11 @@ def actualizar_seleccion_lista():
     listabox_canciones.selection_set(indice_actual)
     listabox_canciones.activate(indice_actual)
 
+# Función para ajustar el volumen
+def ajustar_volumen(valor):
+    global volumen_actual
+    volumen_actual = float(valor)
+    pygame.mixer.music.set_volume(volumen_actual)
 # Función para controlar la barra de progreso
 def ajustar_tiempo(event):
     if reproduciendo:
@@ -157,7 +162,15 @@ def iniciar_descarga():
 # Interfaz gráfica
 ventana = tk.Tk()
 ventana.title("Reproductor de Música")
-ventana.geometry("600x400")
+ventana.geometry("600x600")
+
+# Variable para el progreso de la descarga
+progreso = tk.StringVar()
+progreso.set("Esperando...")
+
+# Etiqueta para mostrar el progreso de la descarga
+etiqueta_progreso = tk.Label(ventana, textvariable=progreso)
+etiqueta_progreso.pack(pady=5)
 
 # Entrada URL
 entrada_url = tk.Entry(ventana, width=50)
@@ -166,6 +179,11 @@ entrada_url.pack(pady=10)
 # Miniatura
 etiqueta_miniatura = tk.Label(ventana)
 etiqueta_miniatura.pack(pady=10)
+
+# Control de volumen
+volumen_slider = ttk.Scale(ventana, from_=0, to=1, orient=tk.HORIZONTAL, length=300, command=ajustar_volumen)
+volumen_slider.set(volumen_actual)
+volumen_slider.pack(pady=10)
 
 # Botones de control
 frame_botones = tk.Frame(ventana)
